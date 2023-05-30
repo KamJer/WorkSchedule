@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 public class Contact {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private long id;
     @Column(name = "PHONE_NUMBER")
     private String phoneNumber;
@@ -14,6 +15,14 @@ public class Contact {
     private String companyName;
     @Column(name = "CONTACT_NAME")
     private String contactName;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getPhoneNumber() {
         return phoneNumber;

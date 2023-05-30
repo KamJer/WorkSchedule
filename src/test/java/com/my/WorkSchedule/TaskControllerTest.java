@@ -1,6 +1,7 @@
 package com.my.WorkSchedule;
 
 import com.my.WorkSchedule.controller.TaskController;
+import com.my.WorkSchedule.entity.Contact;
 import com.my.WorkSchedule.entity.Task;
 import com.my.WorkSchedule.service.TaskService;
 import org.junit.jupiter.api.BeforeEach;
@@ -77,6 +78,7 @@ class TaskControllerTest {
 
 	@Test
 	void addTask_ValidTask_ShouldReturnCreated() {
+		Contact contact = new Contact();
 		Task task = new Task();
 
 		when(taskService.addTask(any(Task.class))).thenReturn(task);
