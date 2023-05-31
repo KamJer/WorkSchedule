@@ -31,7 +31,7 @@ public class ContactController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Contact> getContactById(@PathVariable Long id) {
-        logger.info("GET /contacts/{} - Getting contact by ID: {}", id);
+        logger.info("GET /contacts/{} - Getting contact by ID: {}", id, id);
         return contactService.getContactById(id)
                 .map(contact -> new ResponseEntity<>(contact, HttpStatus.OK))
                 .orElseGet(() -> {
@@ -49,14 +49,14 @@ public class ContactController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Contact> updateContact(@RequestBody Contact contact) {
-        logger.info("PUT /contacts/{} - Updating contact with ID: {}", contact.getId());
+        logger.info("PUT /contacts/{} - Updating contact with ID: {}", contact.getId(), contact.getId());
         Contact updatedContact = contactService.updateContact(contact);
         return new ResponseEntity<>(updatedContact, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteContact(@PathVariable Long id) {
-        logger.info("DELETE /contacts/{} - Deleting contact with ID: {}", id);
+        logger.info("DELETE /contacts/{} - Deleting contact with ID: {}", id, id);
         contactService.deleteContact(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

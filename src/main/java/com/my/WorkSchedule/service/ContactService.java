@@ -35,6 +35,7 @@ public class ContactService {
     }
 
     public void deleteContact(long id) {
+        contactRepository.deleteTaskContactByContactId(id);
         contactRepository.deleteById(id);
     }
 }
