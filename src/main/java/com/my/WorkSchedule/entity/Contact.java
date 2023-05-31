@@ -47,4 +47,14 @@ public class Contact {
     public void setContactName(String contactName) {
         this.contactName = contactName;
     }
+
+    @Override
+    public int hashCode() {
+        return (int) id*phoneNumber.hashCode()*companyName.hashCode()*contactName.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return hashCode() == obj.hashCode();
+    }
 }

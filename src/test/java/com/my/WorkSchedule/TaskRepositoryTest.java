@@ -10,17 +10,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+import java.util.logging.Logger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
+@SpringBootTest
 public class TaskRepositoryTest {
-
-    @Autowired
-    private TestEntityManager entityManager;
-
     @Autowired
     private TaskRepository taskRepository;
 
@@ -34,7 +32,7 @@ public class TaskRepositoryTest {
     public void testAddContactToTask() {
         Contact contact = new Contact();
         contact.setPhoneNumber("111111111");
-        contact.setCompanyName("Google");
+        contact.setCompanyName("Amazon");
         contact.setContactName("Twardostoj Dziąsło");
         contactRepository.save(contact);
 
@@ -42,10 +40,9 @@ public class TaskRepositoryTest {
         task.setDescription("Testowe zadanie 3");
         task.setTime(LocalDateTime.now());
         task.setCarId(1);
+        task.getContact().add(contact);
         taskRepository.save(task);
 
-        task.getContact().add(contact);
-        entityManager.flush();
 
         Task savedTask = taskRepository.findById(task.getId()).orElse(null);
 
@@ -63,12 +60,10 @@ public class TaskRepositoryTest {
         task.setDescription("Testowe zadanie 2");
         task.setTime(LocalDateTime.now());
         task.setCarId(1);
+        task.getEmployees().add(employee);
         taskRepository.save(task);
 
-        task.getEmployees().add(employee);
-        entityManager.flush();
-
-        Task savedTask = taskRepository.findById(task.getId()).orElse(null);
+        Task savedTask = taskRepository.findById(task.getId()).get();
 
         assertThat(employeeRepository.findById(employee.getId()).equals(employee));
         assertThat(savedTask.getEmployees()).contains(employee);
