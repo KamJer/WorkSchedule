@@ -5,10 +5,12 @@ import com.my.WorkSchedule.service.TaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -48,7 +50,7 @@ public class TaskController {
         return new ResponseEntity<>(savedTask, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping()
     public ResponseEntity<Task> updateTask(@RequestBody Task task) {
         logger.info("PUT /tasks/{} - Updating task with ID: {}", task.getId());
         Task updatedTask = taskService.updateTask(task);
@@ -60,5 +62,11 @@ public class TaskController {
         logger.info("DELETE /tasks/{} - Deleting task with ID: {}", id);
         taskService.deleteTask(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/date/{date}")
+    public List<Task> getTasksByDate(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        logger.info("GET /tasks/date/{} - Getting tasks with date {}", date);
+        return taskService.getTasksBetweenDates(date, date.plusDays(1));
     }
 }

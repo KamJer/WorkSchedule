@@ -31,7 +31,7 @@ public class EmployeeController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {
-        logger.info("GET /employees/{} - Getting employee by ID: {}", id);
+        logger.info("GET /employees/{} - Getting employee by ID: {}", id, id);
         return employeeService.getEmployeeById(id)
                 .map(employee -> new ResponseEntity<>(employee, HttpStatus.OK))
                 .orElseGet(() -> {
@@ -49,14 +49,14 @@ public class EmployeeController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Employee> updateEmployee(@RequestBody Employee employee) {
-        logger.info("PUT /employees/{} - Updating employee with ID: {}", employee.getId());
+        logger.info("PUT /employees/{} - Updating employee with ID: {}", employee.getId(), employee.getId());
         Employee updatedEmployee = employeeService.updateEmployee(employee);
         return new ResponseEntity<>(updatedEmployee, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
-        logger.info("DELETE /employees/{} - Deleting employee with ID: {}", id);
+        logger.info("DELETE /employees/{} - Deleting employee with ID: {}", id, id);
         employeeService.deleteEmployee(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

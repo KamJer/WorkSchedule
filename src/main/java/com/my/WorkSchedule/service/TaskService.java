@@ -6,6 +6,7 @@ import com.my.WorkSchedule.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +38,11 @@ public class TaskService {
 
     public void deleteTask(Long id) {
         taskRepository.deleteById(id);
+    }
+
+    public List<Task> getTasksBetweenDates(LocalDate date1, LocalDate date2) {
+//        converting LocalDate to localDateTime to mach types
+        return taskRepository.findByTimeBetween(date1.atStartOfDay(), date2.atStartOfDay());
     }
 }
 

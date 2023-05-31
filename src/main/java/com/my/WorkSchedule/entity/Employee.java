@@ -13,6 +13,12 @@ public class Employee {
     @Column(name = "NAME")
     private String name;
 
+    @Column(name = "CAR_ID")
+    private int carId;
+
+    @Column(name = "PHONE_NUMBER")
+    private String phoneNumber;
+
     public Employee() {
     }
 
@@ -34,6 +40,22 @@ public class Employee {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getCarId() {
+        return carId;
+    }
+
+    public void setCarId(int carId) {
+        this.carId = carId;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     @Override

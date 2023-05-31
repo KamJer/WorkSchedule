@@ -1,6 +1,8 @@
 package com.my.WorkSchedule.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
@@ -22,13 +24,13 @@ public class Task {
             joinColumns = @JoinColumn(name = "TASK_ID"),
             inverseJoinColumns = @JoinColumn(name = "EMPLOYEE_ID")
     )
-
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private List<Employee> employees;
 
     @Column(name = "DESCRIPTION")
     private String description;
     @Column(name = "TIME")
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime time;
     @Column(name = "CAR_ID")
     private int carId;
@@ -39,6 +41,10 @@ public class Task {
             inverseJoinColumns = @JoinColumn(name = "CONTACT_ID")
     )
     private List<Contact> contact;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "EMPLOYEE_SUPERVISING_ID")
+    private Employee employeeSupervising;
 
     public Task() {
     }
@@ -99,6 +105,14 @@ public class Task {
             contact = new ArrayList<>();
         }
         return contact;
+    }
+
+    public Employee getEmployeeSupervising() {
+        return employeeSupervising;
+    }
+
+    public void setEmployeeSupervising(Employee employeeSupervising) {
+        this.employeeSupervising = employeeSupervising;
     }
 
     public void setContact(List<Contact> contact) {

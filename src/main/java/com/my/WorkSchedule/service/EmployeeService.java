@@ -2,6 +2,7 @@ package com.my.WorkSchedule.service;
 
 import com.my.WorkSchedule.entity.Employee;
 import com.my.WorkSchedule.repository.EmployeeRepository;
+import com.my.WorkSchedule.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,7 @@ public class EmployeeService {
     }
 
     public void deleteEmployee(Long id) {
+        employeeRepository.deleteTaskEmployeeByEmployeeId(id);
         employeeRepository.deleteById(id);
     }
 }
