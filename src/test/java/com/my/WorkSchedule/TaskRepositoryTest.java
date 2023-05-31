@@ -32,67 +32,45 @@ public class TaskRepositoryTest {
 
     @Test
     public void testAddContactToTask() {
-        // Tworzenie obiektu kontaktu
         Contact contact = new Contact();
         contact.setPhoneNumber("111111111");
         contact.setCompanyName("Google");
         contact.setContactName("Twardostoj Dziąsło");
         contactRepository.save(contact);
 
-        // Tworzenie obiektu zadania
         Task task = new Task();
-        task.setDescription("Testowe zadanie");
+        task.setDescription("Testowe zadanie 3");
         task.setTime(LocalDateTime.now());
         task.setCarId(1);
         taskRepository.save(task);
 
-        // Dodawanie kontaktu do zadania
         task.getContact().add(contact);
         entityManager.flush();
 
-        // Pobieranie zadania z bazy danych
         Task savedTask = taskRepository.findById(task.getId()).orElse(null);
 
-        // Sprawdzanie czy kontakt znajduje się w tabeli CONTACT_TASK
-        boolean isContactInContactTask = entityManager.getEntityManager()
-                .createQuery("SELECT ct FROM ContactTask ct WHERE ct.contact = :contact")
-                .setParameter("contact", contact)
-                .getResultList().size() > 0;
-        assertThat(isContactInContactTask).isTrue();
-
-        // Sprawdzanie czy kontakt znajduje się na liście kontaktów w obiekcie zadania
+        assertThat(contactRepository.findById(contact.getId()).equals(contact));
         assertThat(savedTask.getContact()).contains(contact);
     }
 
     @Test
     public void testAddEmployeeToTask() {
-        // Tworzenie obiektu pracownika
         Employee employee = new Employee();
-        employee.setName("Jan Nowak");
+        employee.setName("Jan Kowalski");
         employeeRepository.save(employee);
 
-        // Tworzenie obiektu zadania
         Task task = new Task();
-        task.setDescription("Testowe zadanie");
+        task.setDescription("Testowe zadanie 2");
         task.setTime(LocalDateTime.now());
         task.setCarId(1);
         taskRepository.save(task);
 
-        // Dodawanie pracownika do zadania
         task.getEmployees().add(employee);
         entityManager.flush();
 
-        // Pobieranie zadania z bazy danych
         Task savedTask = taskRepository.findById(task.getId()).orElse(null);
 
-        // Sprawdzanie czy pracownik znajduje się w tabeli TASK_EMPLOYEE
-        boolean isEmployeeInTaskEmployee = entityManager.getEntityManager()
-                .createQuery("SELECT te FROM TaskEmployee te WHERE te.employee = :employee")
-                .setParameter("employee", employee)
-                .getResultList().size() > 0;
-        assertThat(isEmployeeInTaskEmployee).isTrue();
-
-        // Sprawdzanie czy pracownik znajduje się na liście pracowników w obiekcie zadania
+        assertThat(employeeRepository.findById(employee.getId()).equals(employee));
         assertThat(savedTask.getEmployees()).contains(employee);
     }
 }

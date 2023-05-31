@@ -10,9 +10,4 @@ public class WorkScheduleApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(WorkScheduleApplication.class, args);
 	}
-
-	@Bean
-	public void addingData() {
-
-	}
 }

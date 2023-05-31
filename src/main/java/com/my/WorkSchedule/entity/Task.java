@@ -16,7 +16,7 @@ public class Task {
     @Column(name = "ID")
     private long id;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "TASK_EMPLOYEE",
             joinColumns = @JoinColumn(name = "TASK_ID"),
@@ -32,7 +32,7 @@ public class Task {
     private LocalDateTime time;
     @Column(name = "CAR_ID")
     private int carId;
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "CONTACT_TASK",
             joinColumns = @JoinColumn(name = "TASK_ID"),
@@ -60,6 +60,9 @@ public class Task {
     }
 
     public List<Employee> getEmployees() {
+        if (employees == null) {
+            employees = new ArrayList<>();
+        }
         return employees;
     }
 
@@ -92,6 +95,9 @@ public class Task {
     }
 
     public List<Contact> getContact() {
+        if (contact == null) {
+            contact = new ArrayList<>();
+        }
         return contact;
     }
 
