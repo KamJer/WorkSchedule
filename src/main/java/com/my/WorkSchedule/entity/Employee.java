@@ -60,7 +60,7 @@ public class Employee {
 
     @Override
     public int hashCode() {
-        return (int) id*name.hashCode();
+        return (int) id;
     }
 
     @Override

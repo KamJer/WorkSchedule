@@ -50,7 +50,7 @@ public class Contact {
 
     @Override
     public int hashCode() {
-        return (int) id*phoneNumber.hashCode()*companyName.hashCode()*contactName.hashCode();
+        return (int) id;
     }
 
     @Override

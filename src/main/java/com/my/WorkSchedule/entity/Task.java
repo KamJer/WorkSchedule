@@ -24,7 +24,6 @@ public class Task {
             joinColumns = @JoinColumn(name = "TASK_ID"),
             inverseJoinColumns = @JoinColumn(name = "EMPLOYEE_ID")
     )
-    @OnDelete(action = OnDeleteAction.SET_NULL)
     private List<Employee> employees;
 
     @Column(name = "DESCRIPTION")
@@ -49,12 +48,14 @@ public class Task {
     public Task() {
     }
 
-    public Task(List<Employee> employees, String description, LocalDateTime time, int carId, List<Contact> contact) {
+    public Task(long id, List<Employee> employees, String description, LocalDateTime time, int carId, List<Contact> contact, Employee employeeSupervising) {
+        this.id = id;
         this.employees = employees;
         this.description = description;
         this.time = time;
         this.carId = carId;
         this.contact = contact;
+        this.employeeSupervising = employeeSupervising;
     }
 
     public long getId() {

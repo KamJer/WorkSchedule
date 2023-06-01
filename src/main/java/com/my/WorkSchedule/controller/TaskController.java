@@ -1,6 +1,8 @@
 package com.my.WorkSchedule.controller;
 
+import com.my.WorkSchedule.entity.Contact;
 import com.my.WorkSchedule.entity.Task;
+import com.my.WorkSchedule.service.ContactService;
 import com.my.WorkSchedule.service.TaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,11 +20,15 @@ import java.util.List;
 public class TaskController {
 
     private final TaskService taskService;
+
+    private final ContactService contactService;
+
     private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
 
     @Autowired
-    public TaskController(TaskService taskService) {
+    public TaskController(TaskService taskService, ContactService contactService) {
         this.taskService = taskService;
+        this.contactService = contactService;
     }
 
     @GetMapping
@@ -38,7 +44,7 @@ public class TaskController {
         return taskService.getTaskById(id)
                 .map(task -> new ResponseEntity<>(task, HttpStatus.OK))
                 .orElseGet(() -> {
-                    logger.warn("GET /tasks/{} - Task not found for ID: {}", id);
+                    logger.warn("GET /tasks/{} - Task not found for ID: {}", id, id);
                     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 });
     }
@@ -69,4 +75,16 @@ public class TaskController {
         logger.info("GET /tasks/date/{} - Getting tasks with date {}", date);
         return taskService.getTasksBetweenDates(date, date.plusDays(1));
     }
+
+    @PutMapping("/{taskId}/contact/{contactId}")
+    public ResponseEntity<Task> addContactToTask(@PathVariable("taskId") long taskId, @PathVariable("contactId") long contactId) {
+        logger.info("PUT /tasks//{}/contact/{} - Updating task (adding contact to task) with task id: {} and contact id: {}", taskId, contactId, taskId, contactId);
+        Task taskToUpdate = taskService.getTaskById(taskId).get();
+        Contact contactToAdd = contactService.getContactById(contactId).get();
+        taskToUpdate.getContact().add(contactToAdd);
+        Task updatedTask = taskService.updateTask(taskToUpdate);
+        return new ResponseEntity<>(updatedTask, HttpStatus.OK);
+    }
+
+
 }
