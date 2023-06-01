@@ -26,6 +26,9 @@ public class EmployeeController {
     public ResponseEntity<List<Employee>> getAllEmployees() {
         logger.info("GET /employees - Getting all employees");
         List<Employee> employees = employeeService.getAllEmployees();
+        if (employees.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(employees, HttpStatus.OK);
     }
 
@@ -51,6 +54,11 @@ public class EmployeeController {
     public ResponseEntity<Employee> updateEmployee(@RequestBody Employee employee) {
         logger.info("PUT /employees/{} - Updating employee with ID: {}", employee.getId(), employee.getId());
         Employee updatedEmployee = employeeService.updateEmployee(employee);
+//        checking if passed employee is a new record or old one for updating (if its new it does not yet have id)
+//        if it is a new employee create new one and return proper code
+        if (employee.getId() != 0) {
+            return new ResponseEntity<>(employee, HttpStatus.CREATED);
+        }
         return new ResponseEntity<>(updatedEmployee, HttpStatus.OK);
     }
 

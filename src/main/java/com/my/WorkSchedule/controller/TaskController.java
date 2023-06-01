@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/tasks")
@@ -35,6 +36,9 @@ public class TaskController {
     public ResponseEntity<List<Task>> getAllTasks() {
         logger.info("GET /tasks - Getting all tasks");
         List<Task> tasks = taskService.getAllTasks();
+        if (tasks.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
@@ -60,6 +64,11 @@ public class TaskController {
     public ResponseEntity<Task> updateTask(@RequestBody Task task) {
         logger.info("PUT /tasks/{} - Updating task with ID: {}", task.getId());
         Task updatedTask = taskService.updateTask(task);
+//        checking if passed task is a new record or old one for updating (if its new it does not yet have id)
+//        if it is a new task create new one and return proper code
+        if (task.getId() != 0) {
+            return new ResponseEntity<>(task, HttpStatus.CREATED);
+        }
         return new ResponseEntity<>(updatedTask, HttpStatus.OK);
     }
 
@@ -71,18 +80,26 @@ public class TaskController {
     }
 
     @GetMapping("/date/{date}")
-    public List<Task> getTasksByDate(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    public ResponseEntity<List<Task>> getTasksByDate(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         logger.info("GET /tasks/date/{} - Getting tasks with date {}", date);
-        return taskService.getTasksBetweenDates(date, date.plusDays(1));
+        List<Task> tasks = taskService.getTasksBetweenDates(date, date.plusDays(1));
+        if (tasks.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity(tasks, HttpStatus.OK);
     }
 
     @PutMapping("/{taskId}/contact/{contactId}")
     public ResponseEntity<Task> addContactToTask(@PathVariable("taskId") long taskId, @PathVariable("contactId") long contactId) {
         logger.info("PUT /tasks//{}/contact/{} - Updating task (adding contact to task) with task id: {} and contact id: {}", taskId, contactId, taskId, contactId);
-        Task taskToUpdate = taskService.getTaskById(taskId).get();
-        Contact contactToAdd = contactService.getContactById(contactId).get();
-        taskToUpdate.getContact().add(contactToAdd);
-        Task updatedTask = taskService.updateTask(taskToUpdate);
+        Optional<Task> taskToUpdate = taskService.getTaskById(taskId);
+        Optional<Contact> contactToAdd = contactService.getContactById(contactId);
+//        checking if passed ids are valid, if not respond with proper http code
+        if (taskToUpdate.isEmpty() || contactToAdd.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        taskToUpdate.get().getContact().add(contactToAdd.get());
+        Task updatedTask = taskService.updateTask(taskToUpdate.get());
         return new ResponseEntity<>(updatedTask, HttpStatus.OK);
     }
 

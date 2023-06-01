@@ -128,7 +128,7 @@ class TaskControllerTest {
 
 		when(taskService.getTasksBetweenDates(any(LocalDate.class), any(LocalDate.class))).thenReturn(tasks);
 
-		List<Task> response = taskController.getTasksByDate(date);
+		List<Task> response = taskController.getTasksByDate(date).getBody();
 
 		assertNotNull(response);
 		assertEquals(tasks.size(), response.size());
